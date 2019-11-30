@@ -45,7 +45,8 @@ function mousePressed(){
         return;
     }
     // console.log(state);
-    let newState=computerMove(state,true)[1];
+    let depth=0;
+    let newState=computerMove(state,true,depth)[1];
     let index=0;
     for(let i=0;i<3;i++){
         for(let j=0;j<3;j++){
@@ -108,17 +109,17 @@ function getState(){
     }
     return state;
 }
-function computerMove(state,max){
+function computerMove(state,max,depth){
     // minimax logic goes here
     let win=winCheck(state);
     if(win==="X"){
-        return [-10];
+        return [-10,state,depth];
     }
     else if(win==="O"){
-        return [10];
+        return [10,state,depth];
     }
     else if(win==="D"){
-        return [0];
+        return [0,state,depth];
     }
     if(max){
         let maxState;
@@ -127,16 +128,16 @@ function computerMove(state,max){
             for(let j=0;j<3;j++){
                 if(state[i][j]==null){
                     state[i][j]="O";
-                    let temp=computerMove(state,false);
-                    if(temp[0]>maxScore){
-                        maxScore=temp[0];
+                    let temp=computerMove(state,false,depth+1);
+                    if((temp[0]-temp[2])>maxScore){
+                        maxScore=temp[0]-temp[2];
                         maxState=JSON.parse(JSON.stringify(state));
                     }
                     state[i][j]=null;
                 }
             }
         }
-        return [maxScore,maxState];
+        return [maxScore,maxState,depth];
     }
     else{
         let minState;
@@ -145,15 +146,15 @@ function computerMove(state,max){
             for(let j=0;j<3;j++){
                 if(state[i][j]==null){
                     state[i][j]="X";
-                    let temp=computerMove(state,true);
-                    if(temp[0]<minScore){
-                        minScore=temp[0];
+                    let temp=computerMove(state,true,depth+1);
+                    if((temp[0]+temp[2])<minScore){
+                        minScore=temp[0]+temp[2];
                         minState=JSON.parse(JSON.stringify(state));
                     }
                     state[i][j]=null;
                 }
             }
         }
-        return [minScore,minState];
+        return [minScore,minState,depth];
     }
 }
