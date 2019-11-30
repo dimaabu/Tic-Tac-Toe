@@ -3,14 +3,15 @@ let board;
 let turn="X";
 let game=true;
 function setup(){
-    createCanvas(300,300);
+    let canvas=createCanvas(300,300);
+    canvas.mousePressed(play);
     board=new Board();
 }
 function draw(){
     background(0);
     board.show();
 }
-function mousePressed(){
+function play(){
     if(!game){
         return;
     }
