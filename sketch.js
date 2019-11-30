@@ -47,7 +47,7 @@ function play(){
     }
     // console.log(state);
     let depth=0;
-    let newState=computerMove(state,true,depth)[1];
+    let newState=computerMove(state,true,depth,-99999,99999)[1];
     let index=0;
     for(let i=0;i<3;i++){
         for(let j=0;j<3;j++){
@@ -110,7 +110,7 @@ function getState(){
     }
     return state;
 }
-function computerMove(state,max,depth){
+function computerMove(state,max,depth,alpha,beta){
     // minimax logic goes here
     let win=winCheck(state);
     if(win==="X"){
@@ -129,9 +129,14 @@ function computerMove(state,max,depth){
             for(let j=0;j<3;j++){
                 if(state[i][j]==null){
                     state[i][j]="O";
-                    let temp=computerMove(state,false,depth+1);
+                    if(beta<=alpha){
+                        state[i][j]=null;
+                        continue;
+                    }
+                    let temp=computerMove(state,false,depth+1,alpha,beta);
                     if((temp[0]-temp[2])>maxScore){
                         maxScore=temp[0]-temp[2];
+                        alpha=maxScore;
                         maxState=JSON.parse(JSON.stringify(state));
                     }
                     state[i][j]=null;
@@ -147,9 +152,14 @@ function computerMove(state,max,depth){
             for(let j=0;j<3;j++){
                 if(state[i][j]==null){
                     state[i][j]="X";
-                    let temp=computerMove(state,true,depth+1);
+                    if(beta<=alpha){
+                        state[i][j]=null;
+                        continue;   
+                    }
+                    let temp=computerMove(state,true,depth+1,alpha,beta);
                     if((temp[0]+temp[2])<minScore){
                         minScore=temp[0]+temp[2];
+                        beta=minScore;
                         minState=JSON.parse(JSON.stringify(state));
                     }
                     state[i][j]=null;
