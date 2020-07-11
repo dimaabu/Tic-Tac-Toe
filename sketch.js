@@ -15,15 +15,20 @@ function play(){
     if(!game){
         return;
     }
+    let validClick=false;
     for(let i in board.cells){
         // 5 is used to avoid clicking on lines
         if(collidePointRect(mouseX,mouseY,board.cells[i].x+5,board.cells[i].y+5,size-5,size-5) && !board.cells[i].status){
             board.cells[i].status=turn;
+            validClick=true;
             // if(turn==="X")
             //     turn="O";
             // else
             //     turn="X";
         }
+    }
+    if(!validClick){
+        return;
     }
     let state=getState();
     let win=winCheck(state);
